@@ -3,10 +3,21 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth';
-import { ShieldCheck, Zap } from 'lucide-react';
+import {
+  LucideBox,
+  LucideBoxes,
+  LucideBraces,
+  LucideClipboard,
+  LucideRefreshCw,
+  LucideShieldCheck,
+  LucideUser,
+  ShieldCheck,
+  Zap,
+} from 'lucide-react';
 import PageContainer from '@/components/common/page-container';
 import ImageBanner from '@/components/banner/image-banner';
 import ImageTextCard from '@/components/card/image-text-card';
+import FeatureGrid from '@/components/grid/feature-grid';
 
 export default function Home() {
   const { isLoggedIn, user, accessToken } = useAuthStore();
@@ -14,7 +25,30 @@ export default function Home() {
   return (
     <PageContainer>
       <ImageBanner />
-
+      <FeatureGrid
+        title={'Backend'}
+        description={
+          '확장 가능한 클린 아키텍처를 지향하며 웹 사이트에서 자주 사용되는 필수 기능이 구현되어 있습니다.'
+        }
+        items={[
+          {
+            title: 'Auth',
+            description:
+              'Json Web Token 인증, 인가. 토큰 자동 갱신. Google, Kakao, Naver 등 소셜 로그인.',
+            icon: LucideShieldCheck,
+          },
+          {
+            title: 'Post',
+            description: '게시글 및 댓글 CRUD',
+            icon: LucideClipboard,
+          },
+          {
+            title: 'Profile',
+            description: '사용자 프로필 CRUD',
+            icon: LucideUser,
+          },
+        ]}
+      />
       {isLoggedIn ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
@@ -86,7 +120,7 @@ export default function Home() {
           />
           <ImageTextCard
             image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
-            title="개완벽한 인증 시스템"
+            title="완벽한 인증 시스템"
             description="JWT, Refresh Token Rotation, 보안 로그인까지 모두 구현되어 있습니다."
           />
           <ImageTextCard
