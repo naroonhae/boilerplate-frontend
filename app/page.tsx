@@ -1,65 +1,106 @@
-import Image from "next/image";
+'use client';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth';
+import { ShieldCheck, Zap } from 'lucide-react';
+import PageContainer from '@/components/common/page-container';
+import ImageBanner from '@/components/banner/image-banner';
+import ImageTextCard from '@/components/card/image-text-card';
 
 export default function Home() {
+  const { isLoggedIn, user, accessToken } = useAuthStore();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <PageContainer>
+      <ImageBanner />
+
+      {isLoggedIn ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>내 정보</CardTitle>
+              <CardDescription>현재 로그인된 사용자 정보입니다.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex justify-between border-b pb-2">
+                <span className="font-semibold">이름</span>
+                <span>{user?.nickname}</span>
+              </div>
+              <div className="flex justify-between border-b pb-2">
+                <span className="font-semibold">이메일</span>
+                <span>{user?.email}</span>
+              </div>
+              <div className="flex justify-between pb-2">
+                <span className="font-semibold">권한</span>
+                <span className="rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
+                  {user?.role}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>인증 상태</CardTitle>
+              <CardDescription>Access Token 정보입니다.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded bg-slate-100 p-3">
+                <p className="break-all text-xs text-slate-500 line-clamp-4">
+                  {accessToken || '토큰 없음'}
+                </p>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                * 실제 운영 시에는 이 카드를 숨기세요.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>빠른 작업</CardTitle>
+              <CardDescription>자주 사용하는 메뉴입니다.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="outline" className="justify-start">
+                <Zap className="mr-2 h-4 w-4" /> 게시글 작성하기
+              </Button>
+              <Button variant="outline" className="justify-start">
+                <ShieldCheck className="mr-2 h-4 w-4" /> 관리자 페이지 이동
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-3">
+          <ImageTextCard
+            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
+            title="Next.js 템플릿"
+            description="Next.js 14, TypeScript, Tailwind CSS, Shadcn UI, React Query, Zod 등 최신 기술 스택으로 구성된 풀스택 템플릿입니다."
+          />
+          <ImageTextCard
+            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
+            title="개발 생산성 향상"
+            description="클린 아키텍처 기반의 프로젝트 구조와 재사용 가능한 컴포넌트로 개발 속도를 높여줍니다."
+          />
+          <ImageTextCard
+            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
+            title="개완벽한 인증 시스템"
+            description="JWT, Refresh Token Rotation, 보안 로그인까지 모두 구현되어 있습니다."
+          />
+          <ImageTextCard
+            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
+            title="초고속 개발 환경"
+            description="Next.js App Router와 React Query로 생산성을 극대화하세요."
+          />
+          <ImageTextCard
+            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
+            title="타입 안정성"
+            description="Backend부터 Frontend까지 TypeScript로 안전하게 개발하세요."
+          />
         </div>
-      </main>
-    </div>
+      )}
+    </PageContainer>
   );
 }
