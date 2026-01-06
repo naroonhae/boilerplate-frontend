@@ -12,11 +12,11 @@ export default function Header() {
   const { isLoggedIn } = useAuthStore();
 
   return (
-    <header className="border-b bg-white fixed w-full z-10">
+    <header className="border-b bg-sidebar fixed w-full z-10">
       <div className="container mx-auto flex h-12 items-center justify-between px-4">
         {/* 로고 영역 */}
         <div className="flex items-center gap-8">
-          <Logo className="text-xl font-bold text-slate-800" />
+          <Logo className="text-xl font-bold" />
         </div>
 
         {/* 우측 메뉴 영역 */}
@@ -30,10 +30,7 @@ export default function Header() {
             /* 비로그인 상태일 때: 로그인/회원가입 버튼 */
             <div className="flex gap-2">
               <Link href="/login">
-                <Button variant="ghost">로그인</Button>
-              </Link>
-              <Link href="/register">
-                <Button>회원가입</Button>
+                <Button>로그인</Button>
               </Link>
             </div>
           )}

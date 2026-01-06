@@ -35,6 +35,12 @@ export const menuConfig: MenuConfig = {
       href: '/docs',
       requireAuth: true,
     },
+    {
+      id: 'board',
+      label: '게시판',
+      href: '/board',
+      requireAuth: true,
+    },
   ],
 
   // 유저 드롭다운 메뉴

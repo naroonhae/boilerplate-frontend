@@ -8,12 +8,11 @@ import { useEffect } from 'react';
 export default function AuthCallback() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setAccessToken, setUser } = useAuthStore();
+  const { login: setUser } = useAuthStore();
 
   useEffect(() => {
     async function exchangeCode(code: string) {
-      const accessToken = await authService.exchange(code);
-      setAccessToken(accessToken);
+      await authService.exchange(code);
       const userData = await authService.me();
       setUser(userData);
       router.push('/');
@@ -22,7 +21,7 @@ export default function AuthCallback() {
     if (code) {
       exchangeCode(code);
     }
-  }, [searchParams, router, setAccessToken, setUser]); // 의존성 배열
+  }, [searchParams, router, setUser]); // 의존성 배열
 
   return <div>로그인 처리 중...</div>;
 }

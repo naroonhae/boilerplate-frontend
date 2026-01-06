@@ -3,24 +3,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth';
-import {
-  LucideBox,
-  LucideBoxes,
-  LucideBraces,
-  LucideClipboard,
-  LucideRefreshCw,
-  LucideShieldCheck,
-  LucideUser,
-  ShieldCheck,
-  Zap,
-} from 'lucide-react';
+import { LucideClipboard, LucideShieldCheck, LucideUser, ShieldCheck, Zap } from 'lucide-react';
 import PageContainer from '@/components/common/page-container';
 import ImageBanner from '@/components/banner/image-banner';
 import ImageTextCard from '@/components/card/image-text-card';
 import FeatureGrid from '@/components/grid/feature-grid';
 
 export default function Home() {
-  const { isLoggedIn, user, accessToken } = useAuthStore();
+  const { isLoggedIn, member } = useAuthStore();
 
   return (
     <PageContainer>
@@ -59,35 +49,16 @@ export default function Home() {
             <CardContent className="space-y-2">
               <div className="flex justify-between border-b pb-2">
                 <span className="font-semibold">이름</span>
-                <span>{user?.nickname}</span>
+                <span>{member?.nickname}</span>
               </div>
               <div className="flex justify-between border-b pb-2">
                 <span className="font-semibold">이메일</span>
-                <span>{user?.email}</span>
+                <span>{member?.email}</span>
               </div>
               <div className="flex justify-between pb-2">
                 <span className="font-semibold">권한</span>
-                <span className="rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
-                  {user?.role}
-                </span>
+                <span className="rounded px-2 py-0.5 text-xs">{member?.role}</span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>인증 상태</CardTitle>
-              <CardDescription>Access Token 정보입니다.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded bg-slate-100 p-3">
-                <p className="break-all text-xs text-slate-500 line-clamp-4">
-                  {accessToken || '토큰 없음'}
-                </p>
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">
-                * 실제 운영 시에는 이 카드를 숨기세요.
-              </p>
             </CardContent>
           </Card>
 
