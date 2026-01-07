@@ -2,7 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/constants';
+import { ACCESS_TOKEN_KEY, API_URL, REFRESH_TOKEN_KEY } from '@/constants/constants';
 import { extractCookieValue } from '@/lib/utils';
 
 const REFRESH_THRESHOLD = 5 * 60; // 5분
@@ -43,14 +43,13 @@ export async function proxy(request: NextRequest) {
 
   if (shouldRefresh && refreshToken) {
     try {
-      const res = await fetch('http://localhost:8080/auth-service/api/v1/reissue', {
+      const res = await fetch(`${API_URL}/auth-service/api/v1/reissue`, {
         method: 'POST',
         headers: { Cookie: `${REFRESH_TOKEN_KEY}=${refreshToken}` },
       });
       const newAccessToken = extractCookieValue(res, ACCESS_TOKEN_KEY);
       const newRefreshToken = extractCookieValue(res, REFRESH_TOKEN_KEY);
 
-      console.log(newAccessToken, newRefreshToken);
       if (res.ok && newAccessToken && newRefreshToken) {
         // 갱신된 토큰으로 헤더 교체 (이번 요청용)
         const requestHeaders = new Headers(request.headers);

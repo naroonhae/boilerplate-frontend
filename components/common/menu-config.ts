@@ -1,4 +1,4 @@
-import { User, Settings, LogOut, LucideIcon } from 'lucide-react';
+import { LogOut, LucideIcon, Settings, User } from 'lucide-react';
 
 export interface MenuItem {
   id: string;
