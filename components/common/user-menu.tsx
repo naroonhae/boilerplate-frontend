@@ -27,8 +27,7 @@ export default function UserMenu() {
     logout: () => {
       authService.logout();
       logout();
-      alert('로그아웃 되었습니다.');
-      router.push('/login');
+      router.push('/');
     },
   };
 
