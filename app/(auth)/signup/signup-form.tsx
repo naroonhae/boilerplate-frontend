@@ -13,7 +13,6 @@ import Link from 'next/link';
 import Logo from '@/components/common/logo';
 import { memberService } from '@/services/member.service';
 import { authService } from '@/services/auth.service';
-import { useAuthStore } from '@/store/auth';
 
 // Zod 스키마 정의
 const signupSchema = z

@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { menuConfig } from './menu-config';
 import { useAuthStore } from '@/store/auth';
-import { Button } from '../ui/button';
+import { menuConfig } from '@/components/common/menu-config';
+import { Button } from '@/components/ui/button';
 
 export default function NavMenu() {
   const pathname = usePathname();
@@ -30,8 +30,8 @@ export default function NavMenu() {
             key={item.id}
             href={item.href}
             className={cn(
-              'flex items-center gap-2 text-sm font-medium transition-colors hover:text-slate-900',
-              isActive ? 'text-slate-900' : 'text-slate-600',
+              'flex items-center gap-2 text-sm font-medium transition-colors hover:text-accent-foreground',
+              isActive ? 'text-accent-foreground' : 'text-muted-foreground',
             )}
           >
             <Button variant={'ghost'}>{item.label}</Button>

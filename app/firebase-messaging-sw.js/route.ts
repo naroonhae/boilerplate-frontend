@@ -1,3 +1,17 @@
+import { NextResponse } from 'next/server';
+
+export async function GET() {
+  const firebaseConfig = {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  };
+
+  const swContent = `
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
 
@@ -5,15 +19,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-comp
 const CACHE_NAME = 'blispace-v1';
 const urlsToCache = ['/', '/manifest.json'];
 
-firebase.initializeApp({
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-});
+firebase.initializeApp(${JSON.stringify(firebaseConfig)});
 
 const messaging = firebase.messaging();
 
@@ -47,14 +53,21 @@ self.addEventListener('activate', (event) => {
 
 // 네트워크 요청 인터셉트 (Network First 전략)
 self.addEventListener('fetch', (event) => {
+  // POST, PUT, DELETE 등의 요청은 캐시하지 않음
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // 네트워크 응답 성공 시 캐시에 저장
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
+        // 네트워크 응답 성공 시 캐시에 저장 (GET 요청만)
+        if (event.request.method === 'GET' && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
         return response;
       })
       .catch(() => {
@@ -78,8 +91,8 @@ messaging.onBackgroundMessage((payload) => {
       url: payload.data?.url || '/',
       ...payload.data,
     },
-    requireInteraction: false, // 자동으로 사라지지 않게 하려면 true
-    vibrate: [200, 100, 200], // 진동 패턴
+    requireInteraction: false,
+    vibrate: [200, 100, 200],
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
@@ -89,20 +102,17 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (event) => {
   console.log('알림 클릭됨:', event.notification);
 
-  event.notification.close(); // 알림 닫기
+  event.notification.close();
 
   const urlToOpen = event.notification.data?.url || '/';
 
-  // 클릭 시 특정 URL로 이동
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      // 이미 열려있는 창이 있으면 포커스
       for (const client of clientList) {
         if (client.url === urlToOpen && 'focus' in client) {
           return client.focus();
         }
       }
-      // 없으면 새 창 열기
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }
@@ -110,8 +120,16 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// 알림 닫기 이벤트 처리 (선택사항)
+// 알림 닫기 이벤트 처리
 self.addEventListener('notificationclose', (event) => {
   console.log('알림 닫힘:', event.notification);
-  // 알림이 닫혔을 때의 처리 (예: 분석 전송)
 });
+`;
+
+  return new NextResponse(swContent, {
+    headers: {
+      'Content-Type': 'application/javascript',
+      'Service-Worker-Allowed': '/',
+    },
+  });
+}

@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth';
-import { menuConfig } from './menu-config';
+import { menuConfig } from '@/components/common/menu-config';
 
 export default function UserMenu() {
   const router = useRouter();
@@ -24,8 +25,7 @@ export default function UserMenu() {
     profile: () => alert('마이페이지 준비중'),
     settings: () => alert('설정 준비중'),
     logout: () => {
-      // 1. (선택) 백엔드 로그아웃 API 호출 (authService.logout())
-      // 2. 스토어 초기화
+      authService.logout();
       logout();
       alert('로그아웃 되었습니다.');
       router.push('/login');

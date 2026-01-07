@@ -1,81 +1,93 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtDecode } from 'jwt-decode';
+import { extractCookieValue } from '@/lib/utils';
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/constants';
 
+const REFRESH_THRESHOLD = 5 * 60; // 5분
+const PROTECTED_ROUTES = ['/mypage', '/settings', '/write'];
+
+interface JwtPayload {
+  exp: number;
+}
 export async function proxy(request: NextRequest) {
-  let accessToken = request.cookies.get('X-ACCESS-TOKEN')?.value;
-  const refreshToken = request.cookies.get('X-REFRESH-TOKEN')?.value;
+  const accessToken = request.cookies.get(ACCESS_TOKEN_KEY)?.value;
+  const refreshToken = request.cookies.get(REFRESH_TOKEN_KEY)?.value;
+  const { pathname } = request.nextUrl;
 
-  // 2. 액세스 토큰은 없는데 리프레시 토큰은 있다면? -> 재발급 시도
-  if (!accessToken && refreshToken) {
+  const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  if (isProtected && !accessToken && !refreshToken) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  let shouldRefresh = false;
+
+  if (accessToken) {
     try {
-      // 백엔드로 재발급 요청 (fetch 사용)
+      const decoded = jwtDecode<JwtPayload>(accessToken);
+
+      const expires = decoded.exp;
+      const now = Math.floor(Date.now() / 1000);
+
+      if (expires - now < REFRESH_THRESHOLD) {
+        shouldRefresh = true;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      shouldRefresh = true;
+    }
+  } else if (refreshToken) {
+    shouldRefresh = true;
+  }
+
+  if (shouldRefresh && refreshToken) {
+    try {
       const res = await fetch('http://localhost:8080/auth-service/api/v1/reissue', {
         method: 'POST',
-        headers: {
-          // 리프레시 토큰 쿠키를 그대로 전달
-          Cookie: `X-REFRESH-TOKEN=${refreshToken}`,
-        },
+        headers: { Cookie: `${REFRESH_TOKEN_KEY}=${refreshToken}` },
       });
+      const newAccessToken = extractCookieValue(res, ACCESS_TOKEN_KEY);
+      const newRefreshToken = extractCookieValue(res, REFRESH_TOKEN_KEY);
 
-      if (res.ok) {
-        // 백엔드가 Set-Cookie 헤더를 줬다면 그걸 파싱하거나, Body에서 꺼냄
-        const data = await res.json();
-        const response = data.data;
-        accessToken = response.accessToken;
+      console.log(newAccessToken, newRefreshToken);
+      if (res.ok && newAccessToken && newRefreshToken) {
+        // 갱신된 토큰으로 헤더 교체 (이번 요청용)
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set('Authorization', `Bearer ${newAccessToken}`);
+
+        // 다음 단계(Page)로 진행
+        const response = NextResponse.next({
+          request: { headers: requestHeaders },
+        });
+
+        // 브라우저 쿠키도 갱신 (다음 요청용)
+        response.cookies.set(ACCESS_TOKEN_KEY, newAccessToken, {
+          path: '/',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+        });
+        response.cookies.set(REFRESH_TOKEN_KEY, newRefreshToken, {
+          path: '/',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+        });
+
+        return response;
       }
     } catch (e) {
       console.error('Middleware Reissue Failed', e);
     }
   }
-
-  // 2. 헤더 조작을 위한 객체 생성
   const requestHeaders = new Headers(request.headers);
-
-  // 3. 토큰이 있다면 Authorization 헤더 추가 (Backend가 알아먹게 변환)
   if (accessToken) {
     requestHeaders.set('Authorization', `Bearer ${accessToken}`);
   }
 
-  // 로그인이 필요한 페이지들
-  const protectedRoutes = ['/dashboard', '/mypage'];
-  const isProtected = protectedRoutes.some((path) => request.nextUrl.pathname.startsWith(path));
-
-  if (isProtected && !accessToken) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-
-  // 4. 변경된 헤더를 가지고 요청 계속 진행
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
+  return NextResponse.next({
+    request: { headers: requestHeaders },
   });
-
-  // [추가] 만약 백엔드에서 온 응답 헤더에 'Set-Cookie'가 있고, 거기에 'refreshToken'이 포함되어 있다면?
-  // (즉, 로그인이나 Reissue가 성공해서 토큰이 구워진 상황)
-  const setCookieHeader = response.headers.get('set-cookie');
-
-  if (setCookieHeader && setCookieHeader.includes('refreshToken')) {
-    // 자바스크립트가 읽을 수 있는 'isLoggedIn' 쿠키를 추가로 구워줌
-    response.cookies.set('isLoggedIn', 'true', {
-      path: '/',
-      httpOnly: false, // [핵심] JS에서 읽을 수 있어야 함
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 14, // 적당히 길게 (Refresh Token 수명과 맞추면 좋음)
-    });
-  }
-
-  // [추가] 로그아웃 감지: refreshToken이 삭제되는 경우 (Max-Age=0 등)
-  if (
-    (setCookieHeader && setCookieHeader.includes('refreshToken=;')) ||
-    request.nextUrl.pathname === '/auth-service/api/v1/logout'
-  ) {
-    response.cookies.delete('isLoggedIn');
-  }
-
-  return response;
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };

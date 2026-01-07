@@ -10,7 +10,6 @@ import { useRouter } from 'next/navigation';
 import z from 'zod';
 import { LoginRequest, authService } from '@/services/auth.service';
 import { AxiosError } from 'axios';
-import { useAuthStore } from '@/store/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -23,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Logo from '@/components/common/logo';
+import { useAuthStore } from '@/store/auth';
 
 const loginSchema = z.object({
   email: z.email('이메일 형식이 올바르지 않습니다.'),
@@ -37,7 +37,7 @@ interface ErrorResponse {
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const router = useRouter();
-  const { login } = useAuthStore(); // 변경된 함수 사용
+  const { login } = useAuthStore();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
@@ -63,8 +63,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.log(error);
-      const errorMessage = error.response?.data?.message || '로그인에 실패했습니다.';
-      alert(errorMessage);
+      alert('로그인에 실패했습니다.');
     },
   });
 

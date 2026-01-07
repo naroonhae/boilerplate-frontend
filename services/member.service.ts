@@ -17,6 +17,6 @@ export const memberService = {
       '/server/member-service/api/v1/members',
       request,
     );
-    return response.data.result == 'SUCCESS';
+    return response.data.success;
   },
 };

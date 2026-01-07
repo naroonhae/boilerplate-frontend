@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth';
-import Logo from './logo';
-import NavMenu from './nav-menu';
-import UserMenu from './user-menu';
+import Logo from '@/components/common/logo';
+import NavMenu from '@/components/common/nav-menu';
+import UserMenu from '@/components/common/user-menu';
 
 export default function Header() {
   const { isLoggedIn } = useAuthStore();

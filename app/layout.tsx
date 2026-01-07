@@ -5,6 +5,7 @@ import QueryProvider from '@/components/providers/query-provider';
 import FCMProvider from '@/components/providers/fcm-provider';
 import Header from '@/components/common/header';
 import { Toaster } from '@/components/ui/sonner';
+import { AuthProvider } from '@/components/providers/auth-provider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -43,15 +44,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="min-h-screen">
-          <QueryProvider>
-            <FCMProvider>
-              <Header />
-              {children}
-            </FCMProvider>
-          </QueryProvider>
-        </div>
-        <Toaster />
+        <AuthProvider>
+          <div className="min-h-screen">
+            <QueryProvider>
+              <FCMProvider>
+                <Header />
+                {children}
+              </FCMProvider>
+            </QueryProvider>
+          </div>
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );

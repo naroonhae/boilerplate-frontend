@@ -1,7 +1,7 @@
 'use client';
 
+import { SignupForm } from '@/app/(auth)/signup/signup-form';
 import Logo from '@/components/common/logo';
-import { SignupForm } from './signup-form';
 
 export default function LoginPage() {
   return (

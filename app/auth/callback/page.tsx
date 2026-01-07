@@ -13,7 +13,12 @@ export default function AuthCallback() {
   useEffect(() => {
     async function exchangeCode(code: string) {
       await authService.exchange(code);
-      const userData = await authService.me();
+      const response = await authService.me();
+      if (!response.success) {
+        alert('유저 정보 로드 실패');
+        return;
+      }
+      const userData = response.data;
       setUser(userData);
       router.push('/');
     }

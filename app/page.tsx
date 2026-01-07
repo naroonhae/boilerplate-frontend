@@ -2,12 +2,12 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/store/auth';
 import { LucideClipboard, LucideShieldCheck, LucideUser, ShieldCheck, Zap } from 'lucide-react';
 import PageContainer from '@/components/common/page-container';
 import ImageBanner from '@/components/banner/image-banner';
 import ImageTextCard from '@/components/card/image-text-card';
 import FeatureGrid from '@/components/grid/feature-grid';
+import { useAuthStore } from '@/store/auth';
 
 export default function Home() {
   const { isLoggedIn, member } = useAuthStore();

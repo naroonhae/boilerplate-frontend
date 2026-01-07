@@ -49,7 +49,10 @@ export const useFCM = () => {
     const initServiceWorker = async () => {
       try {
         if ('serviceWorker' in navigator) {
-          await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          // API 라우트에서 동적으로 생성된 Service Worker 사용
+          await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+            scope: '/',
+          });
           console.log('Service Worker 등록 완료');
 
           // 자동으로 권한 요청

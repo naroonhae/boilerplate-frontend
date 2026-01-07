@@ -33,6 +33,10 @@ export const authService = {
     );
     return response.data.data;
   },
+  logout: async (): Promise<null> => {
+    const response = await axios.post<ApiResponse<null>>('/server/auth-service/api/v1/logout');
+    return response.data.data;
+  },
   me: async (): Promise<ApiResponse<Member>> => {
     const response = await axios.get<ApiResponse<Member>>(
       '/server/member-service/api/v1/members/me',
@@ -57,7 +61,7 @@ export const authService = {
       `/server/auth-service/api/v1/send-verification-email`,
       request,
     );
-    return response.data.result == 'SUCCESS';
+    return response.data.success;
   },
   verifyEmailCode: async (request: VerifyEmailCodeRequest): Promise<boolean> => {
     const response = await axios.post<ApiResponse<boolean>>(
