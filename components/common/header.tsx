@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 
-import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/store/auth';
 import Logo from '@/components/common/logo';
 import NavMenu from '@/components/common/nav-menu';
 import UserMenu from '@/components/common/user-menu';
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth';
 
 export default function Header() {
   const { isLoggedIn } = useAuthStore();

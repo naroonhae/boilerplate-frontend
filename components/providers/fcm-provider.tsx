@@ -1,10 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
+import { toast } from 'sonner';
+
 import { useFCM } from '@/hooks/useFCM';
 import { notificationService } from '@/services/notification.service';
 import { useAuthStore } from '@/store/auth';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
 
 export default function FCMProvider({ children }: { children: React.ReactNode }) {
   const { token, notification } = useFCM();

@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { jwtDecode } from 'jwt-decode';
-import { extractCookieValue } from '@/lib/utils';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/constants';
+import { extractCookieValue } from '@/lib/utils';
 
 const REFRESH_THRESHOLD = 5 * 60; // 5분
 const PROTECTED_ROUTES = ['/mypage', '/settings', '/write'];

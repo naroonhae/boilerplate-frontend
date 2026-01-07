@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'; // [1] InternalAxiosRequestConfig 가져오기
-import { useAuthStore } from '@/store/auth';
+
 import { REFRESH_TOKEN_KEY } from '@/constants/constants';
+import { useAuthStore } from '@/store/auth';
 
 const instance = axios.create({
   headers: { 'Content-Type': 'application/json' },

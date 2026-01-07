@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { useAuthStore } from '@/store/auth';
+
 import { menuConfig } from '@/components/common/menu-config';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/store/auth';
 
 export default function NavMenu() {
   const pathname = usePathname();

@@ -2,6 +2,7 @@
 'use client';
 
 import { useRef } from 'react';
+
 import { Member } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth';
 

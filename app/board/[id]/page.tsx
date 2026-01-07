@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
+
 import ContentComponent from '@/app/board/[id]/content-component';
 import PageContainer from '@/components/common/page-container';
 import { contentService } from '@/services/content.service';
-import { Suspense } from 'react';
 
 export default async function ContentPage({ params }: { params: Promise<{ id: number }> }) {
   const { id } = await params;

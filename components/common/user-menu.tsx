@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 
+import { menuConfig } from '@/components/common/menu-config';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,10 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth';
-import { menuConfig } from '@/components/common/menu-config';
 
 export default function UserMenu() {
   const router = useRouter();

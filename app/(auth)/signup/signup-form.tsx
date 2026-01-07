@@ -1,18 +1,19 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { cn } from '@/lib/utils';
+
+import Logo from '@/components/common/logo';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import Logo from '@/components/common/logo';
-import { memberService } from '@/services/member.service';
+import { cn } from '@/lib/utils';
 import { authService } from '@/services/auth.service';
+import { memberService } from '@/services/member.service';
 
 // Zod 스키마 정의
 const signupSchema = z

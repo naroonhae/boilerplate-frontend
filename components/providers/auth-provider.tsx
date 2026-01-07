@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useAuthStore } from '@/store/auth';
+
 import { authService } from '@/services/auth.service';
+import { useAuthStore } from '@/store/auth';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const hasInitialized = useRef(false);
