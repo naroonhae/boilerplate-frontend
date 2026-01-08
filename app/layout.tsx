@@ -4,9 +4,11 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import Header from '@/components/common/header';
+import InstallPrompt from '@/components/common/install-prompt';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import FCMProvider from '@/components/providers/fcm-provider';
 import QueryProvider from '@/components/providers/query-provider';
+import ServiceWorkerProvider from '@/components/providers/service-worker-provider';
 import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
@@ -47,6 +49,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
+          <ServiceWorkerProvider />
           <div className="min-h-screen">
             <QueryProvider>
               <FCMProvider>
@@ -56,6 +59,7 @@ export default function RootLayout({
             </QueryProvider>
           </div>
           <Toaster />
+          <InstallPrompt />
         </AuthProvider>
       </body>
     </html>

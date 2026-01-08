@@ -1,9 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
 import {
-  requestNotificationPermission,
-  onMessageListener,
   checkNotificationPermission,
   isNotificationSupported,
+  onMessageListener,
+  requestNotificationPermission,
 } from '@/lib/firebase';
 
 interface NotificationPayload {
@@ -21,10 +22,10 @@ export const useFCM = () => {
   const [permission, setPermission] = useState<NotificationPermission>(() =>
     typeof window !== 'undefined' && isNotificationSupported()
       ? checkNotificationPermission()
-      : 'default'
+      : 'default',
   );
   const [isSupported] = useState(() =>
-    typeof window !== 'undefined' ? isNotificationSupported() : false
+    typeof window !== 'undefined' ? isNotificationSupported() : false,
   );
 
   const requestPermission = useCallback(async () => {

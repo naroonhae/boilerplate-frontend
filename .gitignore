@@ -86,3 +86,6 @@ logs
 
 # Optional npm cache directory
 .npm
+
+# PWA files (커스텀 서비스 워커는 제외)
+# public/sw.js 는 커밋함
