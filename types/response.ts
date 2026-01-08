@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 }
 
 export interface Paged<T> {
-  content: T[];
+  content: T;
   totalElements: number;
   totalPages: number;
   size: number;
