@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -81,7 +82,7 @@
   --sidebar-ring: oklch(0.702 0.183 293.541);
 }
 
-.dark {
+/* .dark {
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
@@ -113,6 +114,37 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.38 0.189 293.745);
+} */
+
+.dark {
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+
+  /* 다크 배경 */
+  --background: oklch(0.18 0.01 240);
+  --foreground: oklch(0.96 0.01 60);
+
+  /* 메인 컬러 */
+  --primary: oklch(0.6 0.08 300);
+  --primary-foreground: oklch(0.97 0.008 300);
+  --ring: oklch(0.45 0.1 300);
+
+  --sidebar: oklch(0.18 0.01 240);
+  --sidebar-foreground: oklch(0.96 0.01 60);
+
+  --sidebar-primary: oklch(0.6 0.08 300);
+  --sidebar-primary-foreground: oklch(0.97 0.008 300);
+
+  --sidebar-accent: oklch(0.65 0.1 45);
+  --sidebar-accent-foreground: oklch(0.97 0.008 300);
+
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.6 0.08 300);
+
+  /* 강조 컬러 */
+  --accent: oklch(0.65 0.1 45);
+  --accent-foreground: oklch(0.97 0.008 300);
 }
 
 @layer base {
@@ -124,5 +156,109 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@utility prose {
+  /* Lists */
+
+  ol,
+  ul {
+    @apply my-4;
+
+    ol,
+    ul {
+      @apply my-1;
+    }
+
+    li {
+      @apply my-1 ml-6;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        @apply my-1;
+      }
+    }
+  }
+
+  ol {
+    @apply list-decimal;
+
+    ol {
+      @apply list-[lower-alpha];
+
+      ol {
+        @apply list-[lower-roman];
+      }
+    }
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  /* Tables */
+
+  table {
+    @apply my-4 w-full table-auto border-collapse text-left text-sm/6;
+
+    caption {
+      @apply mt-2 caption-bottom text-left text-sm/6;
+    }
+
+    thead {
+      @apply border-b border-neutral-200;
+    }
+
+    tfoot {
+      @apply border-t border-neutral-200;
+    }
+
+    tr {
+      @apply border-y border-neutral-200 first:border-t-0 last:border-b-0;
+    }
+
+    th {
+      @apply align-bottom font-semibold;
+    }
+
+    td,
+    th {
+      @apply p-2 first:pl-0 last:pr-0;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        @apply my-2 first:mt-0 last:mb-0;
+      }
+    }
+  }
+
+  /* Typography */
+
+  del {
+    @apply line-through opacity-60;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply my-4 font-medium empty:hidden pt-8;
+  }
+
+  p {
+    @apply my-4 empty:hidden;
   }
 }

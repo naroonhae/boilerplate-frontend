@@ -14,7 +14,6 @@ export function parseCookieHeader(setCookieHeader: string): {
   attributes: Record<string, string | boolean>;
 } | null {
   const parts = setCookieHeader.split(';').map((part) => part.trim());
-  if (parts.length === 0) return null;
 
   const [nameValue] = parts;
   const [name, value] = nameValue.split('=');
