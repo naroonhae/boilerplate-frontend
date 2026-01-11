@@ -159,7 +159,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
+      <Card className={`bg-transparent bg-linear-30 from-primary/5 to-accent/5 text-foreground`}>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">
             <Logo />
@@ -313,8 +313,8 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <Link href="/terms">Terms of Service</Link> and{' '}
+        <Link href="/privacy">Privacy Policy</Link>.
       </FieldDescription>
     </div>
   );

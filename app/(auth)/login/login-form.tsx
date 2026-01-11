@@ -71,7 +71,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
+      <Card className={`bg-transparent text-foreground`}>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">
             <Logo />
@@ -99,9 +99,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                     </Link>
                   </Button>
                 </Field>
-                <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-                  또는
-                </FieldSeparator>
+                <FieldSeparator>또는</FieldSeparator>
                 <FormField
                   control={form.control}
                   name="email"
@@ -143,8 +141,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <Link href="/terms">Terms of Service</Link> and{' '}
+        <Link href="/privacy">Privacy Policy</Link>.
       </FieldDescription>
     </div>
   );

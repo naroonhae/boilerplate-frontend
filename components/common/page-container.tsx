@@ -26,14 +26,6 @@ export default function PageContainer({
 }: PageContainerProps) {
   return (
     <div className="w-full relative">
-      {/* 배경 그라데이션 */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        {/* 좌측 상단 - 큰 보라색 원 */}
-        <div className="absolute -top-[50%] -left-[25%] w-250 h-250 bg-primary/30 rounded-full blur-[180px]" />
-        {/* 우측 하단 - 큰 accent 원 */}
-        <div className="absolute -bottom-[50%] -right-[25%] w-300 h-300 bg-accent/30 rounded-full blur-[180px]" />
-      </div>
-
       {/* 배너: 좌우 가득 차게 표시 */}
       {banner && <div className="w-full">{banner}</div>}
 

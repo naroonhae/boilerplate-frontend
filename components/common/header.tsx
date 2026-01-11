@@ -9,10 +9,25 @@ import UserMenu from '@/components/common/user-menu';
 import { Button } from '@/components/ui/button';
 import { useInstallPrompt } from '@/hooks/useInstallPrompt';
 import { useAuthStore } from '@/store/auth';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function Header() {
   const { isLoggedIn } = useAuthStore();
   const { isInstallable, isInstalled, promptInstall } = useInstallPrompt();
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    // 초기 상태 설정
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleInstall = async () => {
     if (isInstalled) {
@@ -34,7 +49,14 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b bg-sidebar fixed w-full z-10">
+    <header
+      className={cn(
+        'fixed w-full z-10 transition-all duration-300',
+        isScrolled
+          ? 'border-b bg-sidebar/95 backdrop-blur-sm'
+          : 'border-b border-transparent bg-transparent',
+      )}
+    >
       <div className="container mx-auto flex h-12 items-center justify-between px-4">
         {/* 로고 영역 */}
         <div className="flex items-center gap-8">

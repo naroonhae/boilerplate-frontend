@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -258,7 +257,23 @@
     @apply my-4 font-medium empty:hidden pt-8;
   }
 
+  h1 {
+    @apply text-3xl font-bold tracking-tight text-gray-900 dark:text-white;
+  }
+
+  h2 {
+    @apply mb-3 text-lg font-bold text-gray-900 dark:text-white;
+  }
+
+  ol {
+    @apply list-decimal space-y-2 pl-5 marker:text-gray-500;
+  }
+
+  ul {
+    @apply list-disc space-y-1 pl-5 marker:text-gray-400;
+  }
+
   p {
-    @apply my-4 empty:hidden;
+    @apply mt-2 text-sm text-gray-500 dark:text-gray-400;
   }
 }

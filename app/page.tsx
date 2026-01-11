@@ -1,112 +1,155 @@
 'use client';
 
-import { LucideClipboard, LucideShieldCheck, LucideUser, ShieldCheck, Zap } from 'lucide-react';
+import { useState } from 'react';
 
-import ImageBanner from '@/components/banner/image-banner';
-import ImageTextCard from '@/components/card/image-text-card';
 import PageContainer from '@/components/common/page-container';
-import FeatureGrid from '@/components/grid/feature-grid';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import MyQuotesSection from '@/components/quotes/my-quotes-section';
+import NotificationSettingsCard from '@/components/quotes/notification-settings-card';
+import SharedQuotesSection from '@/components/quotes/shared-quotes-section';
+import TodayQuoteCard from '@/components/quotes/today-quote-card';
 import { useAuthStore } from '@/store/auth';
+
+// Mock data - Will be replaced with API integration
+const MOCK_TODAY_QUOTE = {
+  id: 1,
+  content: 'Success is not final, failure is not fatal: it is the courage to continue that counts.',
+  author: 'Winston Churchill',
+};
+
+const MOCK_MY_QUOTES = [
+  {
+    id: 1,
+    content: 'Never put off till tomorrow what you can do today.',
+    author: 'Benjamin Franklin',
+    createdAt: '2024-01-10',
+    isShared: true,
+  },
+  {
+    id: 2,
+    content: 'While there is life, there is hope.',
+    author: 'Cicero',
+    createdAt: '2024-01-09',
+    isShared: false,
+  },
+  {
+    id: 3,
+    content: 'Happiness is a habit. Cultivate it.',
+    author: 'Elbert Hubbard',
+    createdAt: '2024-01-08',
+    isShared: true,
+  },
+];
+
+const MOCK_SHARED_QUOTES = [
+  {
+    id: 1,
+    content: 'An investment in knowledge pays the best interest.',
+    author: 'Benjamin Franklin',
+    createdBy: 'Alex Kim',
+    likes: 24,
+    isLiked: false,
+    createdAt: '2024-01-10',
+  },
+  {
+    id: 2,
+    content: 'Whether you think you can or you think you cannot, you are right.',
+    author: 'Henry Ford',
+    createdBy: 'Sarah Lee',
+    likes: 18,
+    isLiked: true,
+    createdAt: '2024-01-09',
+  },
+];
 
 export default function Home() {
   const { isLoggedIn, member } = useAuthStore();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Temporary handlers - Will be replaced with API integration
+  const handleRefreshQuote = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 1000);
+    console.log('Refresh quote');
+  };
+
+  const handleDeleteQuote = (id: number) => {
+    console.log('Delete quote:', id);
+  };
+
+  const handleToggleShare = (id: number) => {
+    console.log('Toggle share:', id);
+  };
+
+  const handleLikeQuote = (id: number) => {
+    console.log('Like quote:', id);
+  };
 
   return (
-    <PageContainer>
-      <ImageBanner />
-      <FeatureGrid
-        title={'Backend'}
-        description={
-          '확장 가능한 클린 아키텍처를 지향하며 웹 사이트에서 자주 사용되는 필수 기능이 구현되어 있습니다.'
-        }
-        items={[
-          {
-            title: 'Auth',
-            description:
-              'Json Web Token 인증, 인가. 토큰 자동 갱신. Google, Kakao, Naver 등 소셜 로그인.',
-            icon: LucideShieldCheck,
-          },
-          {
-            title: 'Post',
-            description: '게시글 및 댓글 CRUD',
-            icon: LucideClipboard,
-          },
-          {
-            title: 'Profile',
-            description: '사용자 프로필 CRUD',
-            icon: LucideUser,
-          },
-        ]}
-      />
-      {isLoggedIn ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>내 정보</CardTitle>
-              <CardDescription>현재 로그인된 사용자 정보입니다.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex justify-between border-b pb-2">
-                <span className="font-semibold">이름</span>
-                <span>{member?.nickname}</span>
-              </div>
-              <div className="flex justify-between border-b pb-2">
-                <span className="font-semibold">이메일</span>
-                <span>{member?.email}</span>
-              </div>
-              <div className="flex justify-between pb-2">
-                <span className="font-semibold">권한</span>
-                <span className="rounded px-2 py-0.5 text-xs">{member?.role}</span>
-              </div>
-            </CardContent>
-          </Card>
+    <PageContainer maxWidth="2xl">
+      <div className="space-y-12 pb-12">
+        {/* Welcome Message */}
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-bold bg-clip-text text-accent">Daily Quotes</h1>
+          <p className="text-muted-foreground">
+            {isLoggedIn && member
+              ? `Hey ${member.nickname}, ready for your daily wisdom?`
+              : 'Your daily dose of inspiration starts here'}
+          </p>
+        </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>빠른 작업</CardTitle>
-              <CardDescription>자주 사용하는 메뉴입니다.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2">
-              <Button variant="outline" className="justify-start">
-                <Zap className="mr-2 h-4 w-4" /> 게시글 작성하기
-              </Button>
-              <Button variant="outline" className="justify-start">
-                <ShieldCheck className="mr-2 h-4 w-4" /> 관리자 페이지 이동
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-3">
-          <ImageTextCard
-            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
-            title="Next.js 템플릿"
-            description="Next.js 14, TypeScript, Tailwind CSS, Shadcn UI, React Query, Zod 등 최신 기술 스택으로 구성된 풀스택 템플릿입니다."
-          />
-          <ImageTextCard
-            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
-            title="개발 생산성 향상"
-            description="클린 아키텍처 기반의 프로젝트 구조와 재사용 가능한 컴포넌트로 개발 속도를 높여줍니다."
-          />
-          <ImageTextCard
-            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
-            title="완벽한 인증 시스템"
-            description="JWT, Refresh Token Rotation, 보안 로그인까지 모두 구현되어 있습니다."
-          />
-          <ImageTextCard
-            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
-            title="초고속 개발 환경"
-            description="Next.js App Router와 React Query로 생산성을 극대화하세요."
-          />
-          <ImageTextCard
-            image="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1160"
-            title="타입 안정성"
-            description="Backend부터 Frontend까지 TypeScript로 안전하게 개발하세요."
-          />
-        </div>
-      )}
+        {/* Quote of the Day */}
+        <TodayQuoteCard
+          quote={isLoggedIn ? MOCK_TODAY_QUOTE : undefined}
+          onRefresh={isLoggedIn ? handleRefreshQuote : undefined}
+          isLoading={isRefreshing}
+        />
+
+        {/* Logged in sections */}
+        {isLoggedIn && (
+          <>
+            {/* Notification Settings */}
+            <NotificationSettingsCard isEnabled={false} />
+
+            {/* My Quotes Section */}
+            <MyQuotesSection
+              quotes={MOCK_MY_QUOTES}
+              onDelete={handleDeleteQuote}
+              onToggleShare={handleToggleShare}
+            />
+
+            {/* Divider */}
+            <div className="border-t" />
+
+            {/* Shared Quotes Section */}
+            <SharedQuotesSection quotes={MOCK_SHARED_QUOTES} onLike={handleLikeQuote} />
+          </>
+        )}
+
+        {/* Guest CTA */}
+        {!isLoggedIn && (
+          <div className="text-center space-y-4 py-12">
+            <h2 className="text-2xl font-bold">Build Your Personal Wisdom Library</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Sign in to save quotes, share with the community, and get daily notifications that
+              inspire you.
+            </p>
+            <div className="flex gap-4 justify-center pt-4">
+              <a
+                href="/login"
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Sign In
+              </a>
+              <a
+                href="/signup"
+                className="px-6 py-2 border border-border rounded-md hover:bg-accent transition-colors"
+              >
+                Create Account
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
     </PageContainer>
   );
 }
